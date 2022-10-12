@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+ret=0
+i=0
+
+for wmf in examples/*.wmf; do
+    for cmd in wmf2eps wmf2fig wmf2gd wmf2svg; do
+        i=$(($i+1))
+        result=ok
+        if ! "$cmd" -o /dev/null "$wmf"; then
+            result="not ok"
+            ret=1
+        fi
+        echo "$result $i $cmd $wmf"
+    done
+done
+
+echo "1..$i"
+exit $ret

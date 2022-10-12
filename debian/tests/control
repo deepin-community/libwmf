@@ -1,0 +1,7 @@
+Tests: build
+Depends: build-essential, libwmf-dev, libexpat1-dev, libjpeg-dev
+Restrictions: allow-stderr
+
+Tests: cli-convert-examples
+Depends: libwmf-bin, gsfonts
+Restrictions: allow-stderr

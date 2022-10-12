@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+
+cd "$ADTTMP"
+
+if [ -n "${DEB_HOST_GNU_TYPE:-}" ]; then
+    CROSS_COMPILE="$DEB_HOST_GNU_TYPE-"
+else
+    CROSS_COMPILE=
+fi
+
+cat >wmf-api.c <<EOF
+#include <libwmf/api.h>
+#include <libwmf/gd.h>
+
+int main (void) {
+    wmfAPI_Options options;
+    wmfAPI* API;
+
+    wmf_error_t error;
+
+    unsigned long flags;
+
+    /* */
+
+    flags = WMF_OPT_FUNCTION;
+
+    options.function = wmf_gd_function;
+
+    /* Other Options */
+
+    error = wmf_api_create (&API,flags,&options);
+    return error == wmf_E_None;
+}
+EOF
+
+${CROSS_COMPILE}gcc -o wmf-api wmf-api.c $(libwmf-config --cflags --libs)
+test -x wmf-api
+echo "everything seems OK"
